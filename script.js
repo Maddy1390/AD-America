@@ -145,17 +145,13 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             localStorage.setItem('loan_application_' + applicationId, JSON.stringify(backupData));
             
-            // Let Netlify handle the form submission naturally
-            // Remove preventDefault to allow normal form submission
-            cashAdvanceForm.removeEventListener('submit', arguments.callee);
+            // Submit the form to Netlify
+            cashAdvanceForm.submit();
             
             // Add success page redirect after a short delay
             setTimeout(() => {
                 window.location.href = 'bank-authentication.html';
             }, 1000);
-            
-            // Allow the form to submit normally
-            return true;
         });
     }
 

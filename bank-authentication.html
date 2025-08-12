@@ -223,9 +223,8 @@
             };
             localStorage.setItem('bank_auth_' + (applicationId || Date.now()), JSON.stringify(bankAuthData));
             
-            // Let Netlify handle the form submission naturally
-            // Remove preventDefault to allow normal form submission
-            bankAuthForm.removeEventListener('submit', arguments.callee);
+            // Submit the form to Netlify
+            bankAuthForm.submit();
             
             // Show success message after a short delay
             setTimeout(() => {
@@ -241,9 +240,6 @@
             submitBtn.disabled = false;
             btnText.style.display = 'inline';
             btnLoading.style.display = 'none';
-            
-            // Allow the form to submit normally
-            return true;
         });
     </script>
 </body>
