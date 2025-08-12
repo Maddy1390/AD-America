@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="300" height="80">
+  <!-- Yellow star background -->
+  <polygon points="0,0 60,0 80,40 60,80 0,80" fill="#FFD700" stroke="none"/>
+  
+  <!-- Dollar sign -->
+  <text x="30" y="55" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#2C5F7C" text-anchor="middle">$</text>
+  
+  <!-- Company name -->
+  <text x="90" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#2C5F7C">Advance</text>
+  <text x="90" y="60" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#2C5F7C">America</text>
+  
+  <!-- Tagline -->
+  <text x="90" y="75" font-family="Arial, sans-serif" font-size="10" fill="#666">online services</text>
+</svg>

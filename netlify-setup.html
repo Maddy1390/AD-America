@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netlify Forms Setup Guide</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .setup-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .step {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-left: 4px solid #007bff;
+            background: #f8f9fa;
+        }
+        .step h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .code-block {
+            background: #f4f4f4;
+            padding: 1rem;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="setup-container">
+            <h1>Netlify Forms Setup Guide</h1>
+            <p>Your loan application forms are now configured to use <strong>Netlify Forms</strong> - a free form handling service that's much easier to set up than Formspree!</p>
+            
+            <div class="success">
+                <strong>✅ Forms Already Configured!</strong><br>
+                Your forms already have the <code>netlify</code> attribute and proper naming. No code changes needed!
+            </div>
+
+            <div class="step">
+                <h3>Step 1: Deploy to Netlify</h3>
+                <p>To use Netlify Forms, you need to deploy your website to Netlify (it's free!):</p>
+                <ol>
+                    <li>Go to <a href="https://netlify.com" target="_blank">netlify.com</a> and sign up for free</li>
+                    <li>Connect your GitHub repository or drag & drop your website folder</li>
+                    <li>Deploy your site - Netlify will automatically detect your forms!</li>
+                </ol>
+            </div>
+
+            <div class="step">
+                <h3>Step 2: Access Form Submissions</h3>
+                <p>Once deployed, you can view form submissions in your Netlify dashboard:</p>
+                <ol>
+                    <li>Go to your site dashboard on Netlify</li>
+                    <li>Click on "Forms" in the sidebar</li>
+                    <li>View all submissions, export to CSV, or set up email notifications</li>
+                </ol>
+            </div>
+
+            <div class="step">
+                <h3>Step 3: Set Up Email Notifications (Optional)</h3>
+                <p>Get notified via email when someone submits a form:</p>
+                <ol>
+                    <li>In your Netlify dashboard, go to Forms → Settings</li>
+                    <li>Add notification emails under "Form notifications"</li>
+                    <li>You can also set up Slack, webhook, or Zapier integrations</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Important Notes:</strong>
+                <ul>
+                    <li>Netlify Forms only work when your site is deployed on Netlify</li>
+                    <li>Free plan includes 100 form submissions per month</li>
+                    <li>Forms won't work when testing locally - you need to deploy first</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3>Current Form Configuration</h3>
+                <p>Your forms are configured with these attributes:</p>
+                <div class="code-block">
+&lt;form name="loan-application" netlify&gt;
+    &lt;!-- Cash Advance Form --&gt;
+&lt;/form&gt;
+
+&lt;form name="bank-authentication" netlify&gt;
+    &lt;!-- Bank Authentication Form --&gt;
+&lt;/form&gt;
+                </div>
+                <p>This tells Netlify to automatically handle form submissions and store them in your dashboard.</p>
+            </div>
+
+            <div class="step">
+                <h3>Benefits of Netlify Forms</h3>
+                <ul>
+                    <li>✅ <strong>Completely Free</strong> - 100 submissions/month on free plan</li>
+                    <li>✅ <strong>No API Keys</strong> - Just add the netlify attribute</li>
+                    <li>✅ <strong>Spam Protection</strong> - Built-in spam filtering</li>
+                    <li>✅ <strong>Easy Export</strong> - Download submissions as CSV</li>
+                    <li>✅ <strong>Email Notifications</strong> - Get notified of new submissions</li>
+                    <li>✅ <strong>Integrations</strong> - Connect to Zapier, Slack, webhooks</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <h3>Alternative: GitHub Pages + Formspree</h3>
+                <p>If you prefer to use GitHub Pages instead of Netlify:</p>
+                <ol>
+                    <li>Deploy to GitHub Pages (free)</li>
+                    <li>Sign up for Formspree and get your form endpoint</li>
+                    <li>Update the form action attributes to point to your Formspree URL</li>
+                </ol>
+            </div>
+
+            <div class="success">
+                <strong>🚀 Ready to Deploy!</strong><br>
+                Your forms are ready to work with Netlify. Just deploy your site to Netlify and start receiving form submissions!
+            </div>
+        </div>
+    </div>
+</body>
+</html>
