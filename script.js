@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form validation function
     function validateForm() {
         let isValid = true;
-        const requiredFields = loanForm.querySelectorAll('[required]');
+        const requiredFields = cashAdvanceForm.querySelectorAll('[required]');
         
         requiredFields.forEach(field => {
             if (!field.value.trim()) {
