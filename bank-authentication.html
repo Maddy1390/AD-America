@@ -99,7 +99,7 @@
 
                         <div class="form-group">
                             <label for="phoneNumber">Phone Number *</label>
-                            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" required>
+                            <input type="tel" id="phoneNumber" name="phoneNumber" required>
                         </div>
 
                         <div class="form-group checkbox-group">
@@ -138,19 +138,6 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-logo">
-                    <img src="advance-america-logo.svg" alt="Advance America" class="logo-img">
-                    <p>Fast cash when you need it most</p>
-                </div>
-                <div class="footer-links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#services">Services</a></li>
-                        <li><a href="index.html#about">About Us</a></li>
-                        <li><a href="index.html#application">Apply Now</a></li>
-                    </ul>
-                </div>
                 <div class="footer-contact">
                     <h3>Contact Us</h3>
                     <p><i class="fas fa-map-marker-alt"></i> Nationwide Service Available</p>
@@ -180,17 +167,7 @@
             btnLoading.style.display = 'inline-block';
             submitBtn.disabled = true;
             
-            // Validate account numbers match
-            const accountNumber = document.getElementById('accountNumber').value;
-            const confirmAccountNumber = document.getElementById('confirmAccountNumber').value;
-            
-            if (accountNumber !== confirmAccountNumber) {
-                alert('Account numbers do not match. Please check and try again.');
-                btnText.style.display = 'inline-block';
-                btnLoading.style.display = 'none';
-                submitBtn.disabled = false;
-                return;
-            }
+            // Form validation passed
             
             // Collect form data
             const formData = new FormData(form);

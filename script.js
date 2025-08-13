@@ -144,15 +144,27 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             localStorage.setItem('loan_application_' + applicationId, JSON.stringify(backupData));
             
-            // Let the form submit naturally to Netlify
-            // The action attribute will handle the redirect
-            // Don't prevent default - let Netlify handle it
-            
-            // Reset button state after a short delay in case of errors
-            setTimeout(() => {
+            // Submit to Netlify and then redirect
+            fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(new FormData(cashAdvanceForm)).toString()
+            })
+            .then(() => {
+                // Redirect to bank authentication page after successful submission
+                window.location.href = 'bank-authentication.html';
+            })
+            .catch(error => {
+                console.error('Form submission error:', error);
+                // Reset button state on error
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
-            }, 5000);
+                alert('There was an error submitting your application. Please try again.');
+            });
+            
+            // Prevent default form submission
+            e.preventDefault();
+            return false;
         });
     }
 
