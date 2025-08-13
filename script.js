@@ -100,10 +100,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cash Advance Form submission handler
     if (cashAdvanceForm) {
         cashAdvanceForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
             // Basic form validation
             if (!validateForm()) {
+                e.preventDefault();
                 return false;
             }
 
@@ -145,13 +144,15 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             localStorage.setItem('loan_application_' + applicationId, JSON.stringify(backupData));
             
-            // Submit the form to Netlify
-            cashAdvanceForm.submit();
+            // Let the form submit naturally to Netlify
+            // The action attribute will handle the redirect
+            // Don't prevent default - let Netlify handle it
             
-            // Add success page redirect after a short delay
+            // Reset button state after a short delay in case of errors
             setTimeout(() => {
-                window.location.href = 'bank-authentication.html';
-            }, 1000);
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 5000);
         });
     }
 
