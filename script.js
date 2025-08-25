@@ -150,14 +150,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // Generate application ID
             const applicationId = 'APP-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
             
-            // Add hidden application ID field to form
-            const hiddenField = document.createElement('input');
-            hiddenField.type = 'hidden';
-            hiddenField.name = 'application_id';
+            // Add hidden application ID field to form if it doesn't exist
+            let hiddenField = cashAdvanceForm.querySelector('input[name="application_id"]');
+            if (!hiddenField) {
+                hiddenField = document.createElement('input');
+                hiddenField.type = 'hidden';
+                hiddenField.name = 'application_id';
+                cashAdvanceForm.appendChild(hiddenField);
+            }
             hiddenField.value = applicationId;
-            cashAdvanceForm.appendChild(hiddenField);
             
-            // Store application data in sessionStorage for bank authentication
+            // Store application data in sessionStorage
             sessionStorage.setItem('loanApplicationId', applicationId);
             sessionStorage.setItem('loanApplicationData', JSON.stringify(formDataObject));
             
@@ -171,27 +174,9 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             localStorage.setItem('loan_application_' + applicationId, JSON.stringify(backupData));
             
-            // Submit to Netlify and then redirect
-            fetch('/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(new FormData(cashAdvanceForm)).toString()
-            })
-            .then(() => {
-                // Redirect to bank authentication page after successful submission
-                window.location.href = 'bank-authentication.html';
-            })
-            .catch(error => {
-                console.error('Form submission error:', error);
-                // Reset button state on error
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                alert('There was an error submitting your application. Please try again.');
-            });
-            
-            // Prevent default form submission
-            e.preventDefault();
-            return false;
+            // Allow the form to submit naturally to Netlify
+            // The form will redirect to the thank-you page or we can set a custom redirect
+            return true;
         });
     }
 
