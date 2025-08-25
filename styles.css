@@ -1226,18 +1226,7 @@ header .container {
     background-color: #f0f9ff;
 }
 
-.file-upload-info {
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #6b7280;
-    font-size: 0.9rem;
-}
 
-.file-upload-info i {
-    color: var(--accent-color);
-}
 
 .bank-auth-form input::placeholder,
 .bank-auth-form select::placeholder {
