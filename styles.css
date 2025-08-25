@@ -229,7 +229,7 @@ header .container {
     position: relative;
     overflow: hidden;
     transition: var(--transition);
-    margin-left: 50px !important;
+    margin-left: 120px !important;
     font-weight: 600;
     box-shadow: var(--box-shadow);
 }
