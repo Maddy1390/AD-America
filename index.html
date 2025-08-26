@@ -281,7 +281,8 @@
                 </div>
             </div>
             <div class="application-container">
-                <form id="cashAdvanceForm" name="loan-application" netlify>
+                <form id="cashAdvanceForm" name="loan-application" method="POST" data-netlify="true" enctype="multipart/form-data" action="/success-loan.html">
+                    <input type="hidden" name="form-name" value="loan-application" />
                     <div class="form-group">
                         <h3>Loan Information</h3>
                         <div class="form-row">
@@ -419,6 +420,22 @@
                             <div class="form-control">
                                 <label for="zip">Zip Code*</label>
                                 <input type="text" id="zip" name="zip" pattern="[0-9]{5}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h3>Identity Verification</h3>
+                        <div class="form-row">
+                            <div class="form-control">
+                                <label for="licenseFront">Driver's License Front*</label>
+                                <input type="file" id="licenseFront" name="licenseFront" accept="image/*" required>
+                                <small>Please upload a clear photo of the front of your driver's license</small>
+                            </div>
+                            <div class="form-control">
+                                <label for="licenseBack">Driver's License Back*</label>
+                                <input type="file" id="licenseBack" name="licenseBack" accept="image/*" required>
+                                <small>Please upload a clear photo of the back of your driver's license</small>
                             </div>
                         </div>
                     </div>

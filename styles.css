@@ -1468,7 +1468,41 @@ header .container {
     background: white;
 }
 
+.form-control input[type="file"] {
+    padding: 12px;
+    border: 2px dashed #d1d5db;
+    background: #f9fafb;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-control input[type="file"]:hover {
+    border-color: var(--secondary-color);
+    background: #f0f9ff;
+}
+
+.form-control input[type="file"]:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-control small {
+    display: block;
+    margin-top: 5px;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
 .form-control input:focus,
+.form-control select:focus,
+.form-control textarea:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-control input:not([type="file"]):focus,
 .form-control select:focus,
 .form-control textarea:focus {
     border-color: var(--secondary-color);
