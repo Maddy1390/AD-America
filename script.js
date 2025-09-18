@@ -126,14 +126,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cash Advance Form Handler - Show loading state only
     if (cashAdvanceForm) {
         cashAdvanceForm.addEventListener('submit', function(e) {
-            const submitBtn = cashAdvanceForm.querySelector('.submit-btn');
-            const btnText = submitBtn.querySelector('.btn-text');
-            const btnLoading = submitBtn.querySelector('.btn-loading');
+            // Important: Do NOT prevent default - let the form submit naturally to Netlify
             
-            // Show loading state
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'inline-block';
-            submitBtn.disabled = true;
+            // Validate form before submission
+            const isValid = validateForm();
+            if (!isValid) {
+                e.preventDefault(); // Only prevent submission if validation fails
+                return;
+            }
+            
+            const submitBtn = cashAdvanceForm.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                // Show loading state
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Processing...';
+                submitBtn.disabled = true;
+                
+                // Re-enable the button after 10 seconds in case of network issues
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }, 10000);
+            }
             
             // Store form data in session storage for potential use
             const formData = new FormData(cashAdvanceForm);
@@ -148,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Also store in localStorage for persistence
             localStorage.setItem('loanApplicationData', JSON.stringify(formDataObj));
             
-            // Let the form submit naturally to Netlify with action redirect
+            console.log('Form submitted to Netlify');
         });
     }
 
@@ -183,6 +197,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form validation function
     function validateForm() {
         let isValid = true;
+        
+        // Make sure we're working with the cashAdvanceForm
+        if (!cashAdvanceForm) {
+            console.error('Cash Advance Form not found');
+            return false;
+        }
+        
         const requiredFields = cashAdvanceForm.querySelectorAll('[required]');
         
         requiredFields.forEach(field => {
@@ -208,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Email validation
-        const emailField = document.getElementById('email');
+        const emailField = cashAdvanceForm.querySelector('#email');
         if (emailField && emailField.value.trim() && !validateEmail(emailField.value)) {
             isValid = false;
             emailField.classList.add('error');
@@ -222,6 +243,12 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 errorMessage.textContent = 'Please enter a valid email address';
             }
+        }
+        
+        if (isValid) {
+            console.log('Form validation passed');
+        } else {
+            console.log('Form validation failed');
         }
 
         return isValid;
