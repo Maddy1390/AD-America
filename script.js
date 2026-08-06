@@ -204,45 +204,50 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
-        const requiredFields = cashAdvanceForm.querySelectorAll('[required]');
-        
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
+        try {
+            const requiredFields = cashAdvanceForm.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('error');
+                    
+                    // Add error message if it doesn't exist
+                    let errorMessage = field.parentElement.querySelector('.error-message');
+                    if (!errorMessage) {
+                        errorMessage = document.createElement('span');
+                        errorMessage.className = 'error-message';
+                        errorMessage.textContent = 'This field is required';
+                        field.parentElement.appendChild(errorMessage);
+                    }
+                } else {
+                    field.classList.remove('error');
+                    const errorMessage = field.parentElement.querySelector('.error-message');
+                    if (errorMessage) {
+                        errorMessage.remove();
+                    }
+                }
+            });
+
+            // Email validation
+            const emailField = cashAdvanceForm.querySelector('#email');
+            if (emailField && emailField.value.trim() && !isValidEmail(emailField.value)) {
                 isValid = false;
-                field.classList.add('error');
+                emailField.classList.add('error');
                 
-                // Add error message if it doesn't exist
-                let errorMessage = field.parentElement.querySelector('.error-message');
+                let errorMessage = emailField.parentElement.querySelector('.error-message');
                 if (!errorMessage) {
                     errorMessage = document.createElement('span');
                     errorMessage.className = 'error-message';
-                    errorMessage.textContent = 'This field is required';
-                    field.parentElement.appendChild(errorMessage);
-                }
-            } else {
-                field.classList.remove('error');
-                const errorMessage = field.parentElement.querySelector('.error-message');
-                if (errorMessage) {
-                    errorMessage.remove();
+                    errorMessage.textContent = 'Please enter a valid email address';
+                    emailField.parentElement.appendChild(errorMessage);
+                } else {
+                    errorMessage.textContent = 'Please enter a valid email address';
                 }
             }
-        });
-
-        // Email validation
-        const emailField = cashAdvanceForm.querySelector('#email');
-        if (emailField && emailField.value.trim() && !validateEmail(emailField.value)) {
+        } catch (error) {
+            console.error('Form validation error:', error);
             isValid = false;
-            emailField.classList.add('error');
-            
-            let errorMessage = emailField.parentElement.querySelector('.error-message');
-            if (!errorMessage) {
-                errorMessage = document.createElement('span');
-                errorMessage.className = 'error-message';
-                errorMessage.textContent = 'Please enter a valid email address';
-                emailField.parentElement.appendChild(errorMessage);
-            } else {
-                errorMessage.textContent = 'Please enter a valid email address';
-            }
         }
         
         if (isValid) {
